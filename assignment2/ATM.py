@@ -49,20 +49,34 @@ class ATMService:
     def withdraw(self, account, amount):
         if amount <= 0:
             print("Error: Withdrawal amount must be positive.")
-        else:
-            if account.withdraw(amount):
-                # Simulate dispensing cash
-                print("Dispensed cash as:")
-                denominations = [500]
-                remaining = amount
-                for denom in denominations:
-                    count = remaining // denom
-                    if count > 0:
-                        print(f"₹{denom} x {count}")
-                        remaining %= denom
-                if remaining > 0:
-                    print(f"Remaining ₹{remaining} could not be dispensed due to unavailable denominations.")
+            return
 
+    # List of available denominations
+        denominations = [500, 200]
+
+    # Check if the amount can be dispensed in available denominations
+        remaining = amount
+        for denom in denominations:
+            count = remaining // denom
+            remaining %= denom
+
+        if remaining > 0:
+            print("Error: The requested amount cannot be dispensed using available denominations.")
+            return
+
+    # Check if the account has sufficient balance
+        if account.balance >= amount:
+            account.withdraw(amount)
+            print("Dispensed cash as:")
+            remaining = amount
+            for denom in denominations:
+                count = remaining // denom
+                if count > 0:
+                    print(f"₹{denom} x {count}")
+                    remaining %= denom
+        else:
+            print("Error: Insufficient balance for withdrawal.")
+    
     def check_balance(self, account):
         account.check_balance()
 
